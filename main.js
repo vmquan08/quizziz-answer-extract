@@ -18,15 +18,21 @@
     function addExtractButton() {
         console.log("[Quizizz Answer Extractor] made by quan08 with love <3");
 
-        const headerContainer = document.querySelector(".header-container .flashcards-cta");
+        const headerContainer = document.querySelector(".header-desc");
         if (!headerContainer) return;
         if (document.getElementById("extract-answer-btn")) return; 
 
         const extractButton = document.createElement("button");
         extractButton.id = "extract-answer-btn";
-        extractButton.className = "review-flashcard-btn strip-default-btn-style";
-        extractButton.type = "button";
-        extractButton.innerHTML = '<span class="btn-text">Save as CSV</span>';
+        extractButton.textContent = "💾";
+    
+        // Style nút cho đẹp
+        extractButton.style.marginLeft = "16px";
+        extractButton.style.padding = "8px";
+        extractButton.style.border = "1px solid #ccc";
+        extractButton.style.borderRadius = "8px";
+        extractButton.style.cursor = "pointer";
+        extractButton.style.backgroundColor = "#f7f7f7";
 
         extractButton.onclick = () => {
             data = [["Question Text", "Question Type", "Option 1", "Option 2", "Option 3", "Option 4", "Option 5", "Correct Answer", "Time in seconds", "Image Link", "Answer explanation"]];
@@ -55,7 +61,7 @@
 
         const optionElements = document.querySelectorAll(".options-container .option");
         let options = [];
-        let correctAnswerIndex = -1;
+        let correctAnswerIndex = [];
 
         optionElements.forEach((optEl, idx) => {
             let optionText = "";
@@ -75,16 +81,22 @@
             }
     
             if (optEl.classList.contains("is-correct")) {
-                correctAnswerIndex = idx + 1;
+                correctAnswerIndex.push(options.length + 1);
             }
     
             options.push(optionText);
         });
 
+        let questionType = "Multiple Choice";
+
+        if (correctAnswerIndex.length >= 2) {
+            questionType = "Multiple Select";
+        }
+
         // nhap vao data
         let row = [
-            questionText, "Multiple Choice",
-            options[0] || "", options[1] || "", options[2] || "", options[3] || "", options[4] || "", correctAnswerIndex || "", "30", imageLink, ""
+            questionText, questionType,
+            options[0] || "", options[1] || "", options[2] || "", options[3] || "", options[4] || "", correctAnswerIndex.join(",") || "", "30", imageLink, ""
         ];
         data.push(row);
     }
